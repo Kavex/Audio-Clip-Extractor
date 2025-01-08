@@ -172,19 +172,27 @@ class AudioExtractorApp:
             # Extract the audio for the given time range
             audio_clip = audio.subclip(self.start_time, self.end_time)
 
+            if audio_clip is None:
+                raise Exception("Audio clip extraction failed.")
+
             # Get the current date and time for the filename
             current_time = datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
             # Create output filename
             output_file = os.path.join(self.output_folder, f"extracted_audio_{self.start_time}_{self.end_time}_{current_time}.{self.output_format.lower()}")
 
-            # Save the audio clip with the selected sample rate
-            audio_clip.write_audiofile(output_file, codec="mp3", ffmpeg_params=["-ar", str(self.sample_rate)] if self.output_format == "MP3" else None)
+            if self.output_format == "MP3":
+                # For MP3, we use the codec parameter
+                audio_clip.write_audiofile(output_file, codec="mp3", ffmpeg_params=["-ar", str(self.sample_rate)])
+            else:
+                # For WAV, we do not specify codec, as it's not necessary
+                audio_clip.write_audiofile(output_file, ffmpeg_params=["-ar", str(self.sample_rate)])
 
             # Log the result
             self.log(f"Extracted audio from {self.start_time}s to {self.end_time}s -> {output_file}")
         except Exception as e:
             self.log(f"Error extracting audio: {e}")
+            messagebox.showerror("Error", f"An error occurred while extracting the audio: {e}")
 
 
 if __name__ == "__main__":
