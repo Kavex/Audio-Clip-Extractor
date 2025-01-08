@@ -1,0 +1,7 @@
+This is for windows
+
+1. Install FFmpeg
+2. CMD ffmpeg -version to make sure you can see it
+3. Install MoviePy: pip install moviepy==1.0.3
+
+MoviePy v2 will error out
