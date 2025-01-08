@@ -17,6 +17,8 @@ class AudioExtractorApp:
         self.output_folder = ""
         self.start_time = 0
         self.end_time = 0
+        self.output_format = "WAV"  # Default output format is WAV
+        self.sample_rate = 22050  # Default sample rate is 22050 Hz
 
         # Video file selection
         self.video_label = tk.Label(root, text="Select Video File:")
@@ -45,13 +47,29 @@ class AudioExtractorApp:
         self.output_button = tk.Button(root, text="Browse", command=self.browse_output_folder)
         self.output_button.grid(row=3, column=1, padx=10, pady=5)
 
+        # Output format selection
+        self.format_label = tk.Label(root, text="Select Output Format:")
+        self.format_label.grid(row=4, column=0, padx=10, pady=5)
+
+        self.format_options = ["MP3", "WAV"]
+        self.format_dropdown = tk.OptionMenu(root, tk.StringVar(value=self.output_format), *self.format_options, command=self.update_output_format)
+        self.format_dropdown.grid(row=4, column=1, padx=10, pady=5)
+
+        # Sample rate selection
+        self.sample_rate_label = tk.Label(root, text="Select Sample Rate (Hz):")
+        self.sample_rate_label.grid(row=5, column=0, padx=10, pady=5)
+
+        self.sample_rate_options = [8000, 11025, 16000, 22050, 44100, 48000]
+        self.sample_rate_dropdown = tk.OptionMenu(root, tk.IntVar(value=self.sample_rate), *self.sample_rate_options, command=self.update_sample_rate)
+        self.sample_rate_dropdown.grid(row=5, column=1, padx=10, pady=5)
+
         # Progress console
         self.console = tk.Text(root, height=10, width=60, state=tk.DISABLED)
-        self.console.grid(row=4, column=0, columnspan=2, padx=10, pady=5)
+        self.console.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
 
         # Extract Button
         self.extract_button = tk.Button(root, text="Extract Audio", command=self.extract_audio_thread)
-        self.extract_button.grid(row=5, column=0, columnspan=2, pady=20)
+        self.extract_button.grid(row=7, column=0, columnspan=2, pady=20)
 
     def browse_video(self):
         """Browse for video file."""
@@ -64,6 +82,14 @@ class AudioExtractorApp:
         self.output_folder = filedialog.askdirectory()
         if self.output_folder:
             self.log(f"Audio files will be saved to: {self.output_folder}")
+
+    def update_output_format(self, choice):
+        """Update output format."""
+        self.output_format = choice
+
+    def update_sample_rate(self, rate):
+        """Update sample rate."""
+        self.sample_rate = int(rate)
 
     def log(self, message):
         """Log messages to the console."""
@@ -150,10 +176,10 @@ class AudioExtractorApp:
             current_time = datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
             # Create output filename
-            output_file = os.path.join(self.output_folder, f"extracted_audio_{self.start_time}_{self.end_time}_{current_time}.mp3")
+            output_file = os.path.join(self.output_folder, f"extracted_audio_{self.start_time}_{self.end_time}_{current_time}.{self.output_format.lower()}")
 
-            # Save the audio clip
-            audio_clip.write_audiofile(output_file)
+            # Save the audio clip with the selected sample rate
+            audio_clip.write_audiofile(output_file, codec="mp3", ffmpeg_params=["-ar", str(self.sample_rate)] if self.output_format == "MP3" else None)
 
             # Log the result
             self.log(f"Extracted audio from {self.start_time}s to {self.end_time}s -> {output_file}")
