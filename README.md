@@ -11,3 +11,8 @@ FFmpeg
 
 
 ![image](https://github.com/user-attachments/assets/3be9d34f-55f4-407d-b95c-4012e0e805ce)
+
+
+Bonus app: Timestamp tool for lazy calculations 
+
+![image](https://github.com/user-attachments/assets/ddfec903-22d2-425b-9ab5-553bbb60f3e6)
