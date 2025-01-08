@@ -1,10 +1,13 @@
-# Extract-Audio-Clip-from-Video-File
-Extracts Audio Clip from Video File using a start and stop timestamp. 
+# Audio Clip Extractor
+Extracts Audio Clips from Video File using a start and stop timestamp. I made this to get audio clips from anime so i can train an AI of my fav voices. 
 
-Basic Script: 
+This will extract as an MP3 file.
 
-* Install moviepy 1.0.3
-  
-* Install FFmpeg
+Requirements: 
 
-* Change the video_path, start_time, and end_time.
+moviepy 1.0.3
+
+FFmpeg
+
+
+![image](https://github.com/user-attachments/assets/3be9d34f-55f4-407d-b95c-4012e0e805ce)
